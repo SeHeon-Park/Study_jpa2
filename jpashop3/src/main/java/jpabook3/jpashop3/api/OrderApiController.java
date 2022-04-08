@@ -6,10 +6,11 @@ import jpabook3.jpashop3.domain.OrderItem;
 import jpabook3.jpashop3.domain.OrderStatus;
 import jpabook3.jpashop3.repository.OrderRepository;
 import jpabook3.jpashop3.repository.OrderSearch;
+import jpabook3.jpashop3.repository.order.query.orderSimpleQueryRepository;
+import jpabook3.jpashop3.repository.order.simplequery.OrderSimpleQueryDto;
+import jpabook3.jpashop3.repository.order.simplequery.OrderSimpleQueryRepository;
 import lombok.Data;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,6 +24,7 @@ import java.util.stream.Collectors;
 public class OrderApiController {
 
     private final OrderRepository orderRepository;
+    private final OrderSimpleQueryRepository orderSimpleQueryRepository;
 
     @GetMapping("/api/v1/orders")
     public List<Order> orderV1(){ // Entity로 관계 맺기
@@ -55,6 +57,11 @@ public class OrderApiController {
                                     ){
         List<Order> orders = orderRepository.findOrderWithFetch(offset, limit);
         return orders.stream().map(o->new OrderDto(o)).collect(Collectors.toList());
+    }
+
+    @GetMapping("/api/v4/orders")
+    public List<OrderSimpleQueryDto> orderV4(){
+        return orderSimpleQueryRepository.findOrderDtos();
     }
 
     @Data
